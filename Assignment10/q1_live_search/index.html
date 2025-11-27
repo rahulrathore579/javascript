@@ -1,0 +1,51 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Q1 - Live Search (jQuery AJAX)</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body{font-family:Arial;padding:20px}
+    .product{display:flex;gap:12px;align-items:center;padding:8px;border-bottom:1px solid #eee}
+    .loading{display:none}
+  </style>
+</head>
+<body>
+  <h2>Live Product Search</h2>
+  <input id="search" placeholder="Type product name..." autocomplete="off" />
+  <div class="loading" id="loading">Loading...</div>
+  <div id="results"></div>
+
+<script>
+$(function(){
+  var timeout = null;
+  $('#search').on('input', function(){
+    var q = $(this).val().trim();
+    clearTimeout(timeout);
+    $('#loading').show();
+    timeout = setTimeout(function(){
+      $.get('/products', {q: q})
+        .done(function(data){
+          $('#results').empty();
+          if(!data.length){
+            $('#results').text('No products found');
+          } else {
+            data.forEach(function(p){
+              $('#results').append(
+                $('<div>').addClass('product').append(
+                  $('<img>').attr('src', p.image).attr('width',80),
+                  $('<div>').append($('<div>').text(p.name), $('<div>').text('₹'+p.price))
+                )
+              );
+            });
+          }
+        })
+        .fail(function(){ $('#results').text('Error loading products') })
+        .always(function(){ $('#loading').hide() });
+    }, 250); // debounce
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "employees": [
+    {
+      "id": 1,
+      "name": "Alice Johnson",
+      "status": "active"
+    },
+    {
+      "id": 2,
+      "name": "Bob Kumar",
+      "status": "inactive"
+    },
+    {
+      "id": 3,
+      "name": "Carlos Diaz",
+      "status": "active"
+    },
+    {
+      "id": 4,
+      "name": "Diana Smith",
+      "status": "inactive"
+    },
+    {
+      "id": 5,
+      "name": "Eve Zhang",
+      "status": "active"
+    }
+  ]
+}

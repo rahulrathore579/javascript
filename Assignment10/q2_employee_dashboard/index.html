@@ -1,0 +1,69 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Q2 - Employee Dashboard</title>
+  <style>
+    body{font-family:Arial;padding:20px}
+    .row{display:flex;align-items:center;gap:12px;padding:8px;border-bottom:1px solid #eee}
+  </style>
+</head>
+<body>
+  <h2>Employee Status Dashboard</h2>
+  <div id="list">Loading employees...</div>
+<script>
+function fetchEmployees(){
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET','/employees');
+  xhr.onload = function(){
+    if(xhr.status>=200 && xhr.status<300){
+      var data = JSON.parse(xhr.responseText);
+      var html = '';
+      data.forEach(function(e){
+        html += '<div class="row" data-id="'+e.id+'"><strong>'+e.name+'</strong> - <span class="status">'+e.status+'</span> <button class="toggle">Toggle</button></div>';
+      });
+      document.getElementById('list').innerHTML = html;
+      attachHandlers();
+    } else {
+      document.getElementById('list').innerText = 'Failed to load employees';
+    }
+  };
+  xhr.onerror = function(){ document.getElementById('list').innerText = 'Network error' };
+  xhr.send();
+}
+
+function attachHandlers(){
+  document.querySelectorAll('.toggle').forEach(function(btn){
+    btn.onclick = function(){
+      var row = btn.parentElement;
+      var id = row.getAttribute('data-id');
+      var statusSpan = row.querySelector('.status');
+      var current = statusSpan.innerText;
+      var newStatus = (current==='active') ? 'inactive' : 'active';
+      // optimistic UI update
+      statusSpan.innerText = newStatus;
+      // send PATCH
+      var xhr = new XMLHttpRequest();
+      xhr.open('PATCH','/employees/'+id);
+      xhr.setRequestHeader('Content-Type','application/json;charset=UTF-8');
+      xhr.onload = function(){
+        if(!(xhr.status>=200 && xhr.status<300)){
+          // revert
+          statusSpan.innerText = current;
+          alert('Failed to update status');
+        }
+      };
+      xhr.onerror = function(){
+        statusSpan.innerText = current;
+        alert('Network error while updating status');
+      };
+      xhr.send(JSON.stringify({status:newStatus}));
+    };
+  });
+}
+
+fetchEmployees();
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Q6 - User Registration</title>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<style>body{font-family:Arial;padding:20px}label{display:block;margin:6px 0}</style>
+</head>
+<body>
+  <h2>Register</h2>
+  <form id="reg">
+    <label>Name: <input name="name" required></label>
+    <label>Email: <input name="email" type="email" required></label>
+    <label>Password: <input name="password" type="password" required></label>
+    <button>Register</button>
+  </form>
+  <div id="msg"></div>
+<script>
+document.getElementById('reg').addEventListener('submit', function(e){
+  e.preventDefault();
+  var f = new FormData(this);
+  var payload = {name:f.get('name'), email:f.get('email'), password:f.get('password')};
+  document.getElementById('msg').innerText = 'Checking...';
+  axios.get('/users', {params:{email: payload.email}}).then(function(r){
+    if(r.data && r.data.length){
+      document.getElementById('msg').innerText = 'Email already registered.';
+    } else {
+      axios.post('/users', payload).then(function(){ document.getElementById('msg').innerText = 'Registered successfully.'}).catch(function(){ document.getElementById('msg').innerText = 'Registration failed.' });
+    }
+  }).catch(function(){ document.getElementById('msg').innerText = 'Error checking email.' });
+});
+</script>
+</body>
+</html>

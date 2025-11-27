@@ -1,0 +1,34 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Finish report",
+      "priority": "High",
+      "completed": false
+    },
+    {
+      "id": 2,
+      "title": "Email client",
+      "priority": "Medium",
+      "completed": true
+    },
+    {
+      "id": 3,
+      "title": "Clean inbox",
+      "priority": "Low",
+      "completed": false
+    },
+    {
+      "id": 4,
+      "title": "Plan sprint",
+      "priority": "High",
+      "completed": false
+    },
+    {
+      "id": 5,
+      "title": "Buy supplies",
+      "priority": "Low",
+      "completed": true
+    }
+  ]
+}
